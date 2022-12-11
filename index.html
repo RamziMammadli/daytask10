@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      let today = moment().format("DD-MM-YYYY");
+      let month = moment().format("MM");
+      let today15 = moment().add(15, "minutes");
+
+      const url = "https://api.aladhan.com/v1/calendarByCity?city=Baku&country=Azerbaijan&month=12&year=2022";
+
+      fetch(url)
+        .then((res) => res.json())
+        .then((db) => {
+          let todaysPrayTime = db.data.filter((item) => {
+            if (item.date.gregorian.date == today) {
+              console.log("today", item.timings);
+            }
+          });
+        });
+
+      let alertTime = moment().add(-15, "minutes").format("HH:mm");
+
+      fetch(url)
+        .then((res) => res.json())
+        .then((data) => {
+          data.data.forEach((elem) => {
+            if (elem.date.gregorian.date == today) {
+              Object.values(elem.timings).forEach((item) => {
+                if (item == alertTime) {
+                  console.log("Namaz time");
+                }
+              });
+            }
+          });
+        });
+
+        
+
+      //inputa baglamadim.
+
+      let _city = "Baku";
+      let _country = "Azerbaijan";
+      let _month = "12";
+      let _year = "2022";
+
+      const _url = `https://api.aladhan.com/v1/calendarByCity?city=${_city}&country=${_country}&month=${_month}&year=${_year}`;
+
+      fetch(_url)
+        .then((response) => response.json())
+        .then((responseData) => {
+          let monthlyPrayTimes = responseData.data.filter((item) => {
+            if (item.date.gregorian.month.number == month) {
+              console.log(item.date.readable, item.timings);
+            }
+          });
+        });
+    </script>
+  </body>
+</html>
